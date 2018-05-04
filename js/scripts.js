@@ -13,6 +13,7 @@ function addItemToCart(name, price, unit) {
 			return;
 		}
 	}
+
 	var item = new Item(name, price, unit);
 	cart.push(item);
 }
@@ -60,7 +61,22 @@ function totalPriceInCart() { // Returns the total amount of the price in the ca
 }
 
 
-// listCart() -> array of Item
+function listCart() { // array of Items
+	var cartCopy = [];
+	for (var i in cart) {
+		var item = cart[i];
+		var itemCopy = {};
+		for (var p in item) {
+			itemCopy[p] = item[p];
+		}
+		cartCopy.push(itemCopy);
+	}	
+	return cartCopy;
+}
+
+
+
+
 
 // saveCart()
 
