@@ -1,55 +1,78 @@
 var cart = [];
 
-var Item = function(name, price, count) {
+var Item = function(name, price, unit) {
 	this.name = name;
 	this.price = price;
-	this.count = count;
+	this.unit = unit;
 };
 
-function addItemToCart(name, price, count) {
+function addItemToCart(name, price, unit) {
 	for (var i in cart) {
 		if (cart[i].name === name) {
-			cart[i].count += count;
+			cart[i].unit += unit;
 			return;
 		}
 	}
-	var item = new Item(name, price, count);
+	var item = new Item(name, price, unit);
 	cart.push(item);
 }
 
-addItemToCart("Apple", 1.22, 1);
-addItemToCart("Pear", 1.99, 3);
-addItemToCart("Apple", 1.22, 2);
-addItemToCart("Apple", 1.22, 2);
-
-
-function removeItemFromCart(name) { // Removes one item
+function removeUnitFromItem(name) { // Removes one unit from chosen item
 	for (var i in cart) {
 		if (cart[i].name === name) {
-			cart[i].count --;
-			if (cart[i].count === 0) {
+			cart[i].unit --;
+			if (cart[i].unit === 0) {
 				cart.splice(i, 1);
 			}
 			break;
 		}
 	}
 }
-console.log(cart);
 
-console.log(cart[0].count);
+function removeItemFromCart(name) { // Removes chosen item from cart
+	for (var i in cart) {
+		if (cart[i].name === name) {
+			cart.splice(i, 1);
+			break;
+		}
+	}
+}
 
-console.log(cart);
+function emptyCart() { // Removes all items from cart
+	cart = [];
+}
 
-// removeItemFromCartAll(name) // Removes all items name
+function totalUnitInCart() { // Returns the total amount of units in the cart 
+	var totalCount = 0;
+	for (var i in cart) {
+		totalCount += cart[i].unit;
+	}
 
-// clearCart()
+	return totalCount;
+}
 
-// countCart() -> return total count
+function totalPriceInCart() { // Returns the total amount of the price in the cart
+	var totalPrice = 0;
+	for (var i in cart) {
+		totalPrice += cart[i].price;
+	}
+	return totalPrice;
+}
 
-// totalCart() -> return total cost
 
 // listCart() -> array of Item
 
 // saveCart()
 
 // loadCart()
+
+addItemToCart("Apple", 1.22, 1);
+addItemToCart("Pear", 1.99, 3);
+addItemToCart("Apple", 1.22, 2);
+addItemToCart("Banana", .99, 2);
+addItemToCart("Almond Milk", 4.99, 1);
+addItemToCart("Honey", 8.99, 2);
+addItemToCart("Bacon", 5.95, 2);
+addItemToCart("Plush Toy", 7.99, 1);
+addItemToCart("Apple", 1.22, 3);
+addItemToCart("Pear", 1.99, 3);
