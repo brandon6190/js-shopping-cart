@@ -10,12 +10,14 @@ function addItemToCart(name, price, unit) {
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart[i].unit += unit;
+			cart[i].price += price;
 			return;
 		}
 	}
 
 	var item = new Item(name, price, unit);
 	cart.push(item);
+	saveCart();
 }
 
 function removeUnitFromItem(name) { // Removes one unit from chosen item
@@ -28,6 +30,7 @@ function removeUnitFromItem(name) { // Removes one unit from chosen item
 			break;
 		}
 	}
+	saveCart();
 }
 
 function removeItemFromCart(name) { // Removes chosen item from cart
@@ -37,10 +40,12 @@ function removeItemFromCart(name) { // Removes chosen item from cart
 			break;
 		}
 	}
+	saveCart();
 }
 
 function emptyCart() { // Removes all items from cart
 	cart = [];
+	saveCart();
 }
 
 function totalUnitInCart() { // Returns the total amount of units in the cart 
@@ -61,7 +66,7 @@ function totalPriceInCart() { // Returns the total amount of the price in the ca
 }
 
 
-function listCart() { // array of Items
+function listCart() { // Returns cart as an array
 	var cartCopy = [];
 	for (var i in cart) {
 		var item = cart[i];
@@ -75,20 +80,11 @@ function listCart() { // array of Items
 }
 
 
+function saveCart() { // Saves Cart into the files local storage
+	localStorage.setItem("shoppingCart", JSON.stringify(cart));
+}
 
 
-
-// saveCart()
-
-// loadCart()
-
-addItemToCart("Apple", 1.22, 1);
-addItemToCart("Pear", 1.99, 3);
-addItemToCart("Apple", 1.22, 2);
-addItemToCart("Banana", .99, 2);
-addItemToCart("Almond Milk", 4.99, 1);
-addItemToCart("Honey", 8.99, 2);
-addItemToCart("Bacon", 5.95, 2);
-addItemToCart("Plush Toy", 7.99, 1);
-addItemToCart("Apple", 1.22, 3);
-addItemToCart("Pear", 1.99, 3);
+function loadCart() { // Loads the shopping cart from the files local storage
+	cart = JSON.parse(localStorage.getItem("shoppingCart"));
+}
