@@ -1,3 +1,29 @@
+$(".add-to-cart").click(function(event){
+	event.preventDefault();
+	var name = $(this).attr("data-name");
+	var price = Number ($(this).attr("data-price"));
+
+	addItemToCart(name, price, 1);
+	displayCart();
+});
+
+function displayCart() {
+	console.log("*** Display Cart ***"); // Test
+
+	var cartArray = listCart();
+	console.log(`*** Count Cart: ${cartArray.length} ***`); // Test
+
+	var output = "";
+	for (var i in cartArray) {
+		output += `<li>${cartArray[i].name} ${cartArray[i].unit}</li>`
+	}
+	$("#show-cart").html(output);
+}
+
+
+// **********************************************************
+// Shopping cart functions
+
 var cart = [];
 
 var Item = function(name, price, unit) {
@@ -6,7 +32,7 @@ var Item = function(name, price, unit) {
 	this.unit = unit;
 };
 
-function addItemToCart(name, price, unit) {
+function addItemToCart(name, price, unit) { //  Adds item to cart
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart[i].unit += unit;
@@ -88,3 +114,10 @@ function saveCart() { // Saves Cart into the files local storage
 function loadCart() { // Loads the shopping cart from the files local storage
 	cart = JSON.parse(localStorage.getItem("shoppingCart"));
 }
+
+loadCart();
+displayCart();
+
+var array = listCart();
+console.log("------------------------------------");
+console.log(array);
