@@ -8,16 +8,13 @@ $(".add-to-cart").click(function(event){
 });
 
 function displayCart() {
-	console.log("*** Display Cart ***"); // Test
-
 	var cartArray = listCart();
-	console.log(`*** Count Cart: ${cartArray.length} ***`); // Test
-
 	var output = "";
 	for (var i in cartArray) {
 		output += `<li>${cartArray[i].name} ${cartArray[i].unit}</li>`
 	}
 	$("#show-cart").html(output);
+	$("#total-cart").html(totalPriceInCart());
 }
 
 
@@ -37,10 +34,10 @@ function addItemToCart(name, price, unit) { //  Adds item to cart
 		if (cart[i].name === name) {
 			cart[i].unit += unit;
 			cart[i].price += price;
+			saveCart();
 			return;
 		}
 	}
-
 	var item = new Item(name, price, unit);
 	cart.push(item);
 	saveCart();
@@ -118,6 +115,5 @@ function loadCart() { // Loads the shopping cart from the files local storage
 loadCart();
 displayCart();
 
-var array = listCart();
-console.log("------------------------------------");
-console.log(array);
+
+
