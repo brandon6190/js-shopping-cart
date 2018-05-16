@@ -7,15 +7,22 @@ $(".add-to-cart").click(function(event){
 	displayCart();
 });
 
+$("#clear-cart").click(function(event) {
+	emptyCart();
+	displayCart();
+});
+
 function displayCart() {
 	var cartArray = listCart();
 	var output = "";
 	for (var i in cartArray) {
-		output += `<li>${cartArray[i].name} ${cartArray[i].unit}</li>`
+		output += `<li>${cartArray[i].name} 
+		${cartArray[i].unit} x ${cartArray[i].price} = ${cartArray[i].total}</li>`
 	}
 	$("#show-cart").html(output);
 	$("#total-cart").html(totalPriceInCart());
 }
+
 
 
 // **********************************************************
@@ -33,7 +40,6 @@ function addItemToCart(name, price, unit) { //  Adds item to cart
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart[i].unit += unit;
-			cart[i].price += price;
 			saveCart();
 			return;
 		}
@@ -83,9 +89,9 @@ function totalUnitInCart() { // Returns the total amount of units in the cart
 function totalPriceInCart() { // Returns the total amount of the price in the cart
 	var totalPrice = 0;
 	for (var i in cart) {
-		totalPrice += cart[i].price;
+		totalPrice += cart[i].price * cart[i].unit;
 	}
-	return totalPrice;
+	return totalPrice.toFixed(2);
 }
 
 
@@ -97,6 +103,7 @@ function listCart() { // Returns cart as an array
 		for (var p in item) {
 			itemCopy[p] = item[p];
 		}
+		itemCopy.total = (item.price * item.unit).toFixed(2);
 		cartCopy.push(itemCopy);
 	}	
 	return cartCopy;
