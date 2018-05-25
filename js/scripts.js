@@ -3,17 +3,17 @@ $(".add-to-cart").click(function(event){
 	var name = $(this).attr("data-name");
 	var price = Number ($(this).attr("data-price"));
 
-	addItemToCart(name, price, 1);
+	shoppingCart.addItemToCart(name, price, 1);
 	displayCart();
 });
 
 $("#clear-cart").click(function(event) {
-	emptyCart();
+	shoppingCart.emptyCart();
 	displayCart();
 });
 
 function displayCart() {
-	var cartArray = listCart();
+	var cartArray = shoppingCart.listCart();
 	var output = "";
 	for (var i in cartArray) {
 		output += `<li>
@@ -25,24 +25,24 @@ function displayCart() {
 		</li>`
 	}
 	$("#show-cart").html(output);
-	$("#total-cart").html(totalPriceInCart());
+	$("#total-cart").html(shoppingCart.totalPriceInCart());
 }
 
 $("#show-cart").on("click", ".delete-item", function(event) { // Clears Selected Item from cart
 	var name = $(this).attr("data-name");
-	removeItemFromCart(name);
+	shoppingCart.removeItemFromCart(name);
 	displayCart();
 });
 
 $("#show-cart").on("click", ".subtract-item", function(event) { // Subtracts 1 unit from the selected item
 	var name = $(this).attr("data-name");
-	removeUnitFromItem(name);
+	shoppingCart.removeUnitFromItem(name);
 	displayCart();
 });
 
 $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the selected item
 	var name = $(this).attr("data-name");
-	addItemToCart(name, 0, 1);
+	shoppingCart.addItemToCart(name, 0, 1);
 	displayCart();
 });
 
@@ -50,28 +50,28 @@ $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the
 // **********************************************************
 // Shopping cart functions
 
-var cart = [];
+var shoppingCart = {};
 
-var Item = function(name, price, unit) {
+shoppingCart.cart = [];
+
+shoppingCart.Item = function(name, price, unit) {
 	this.name = name;
 	this.price = price;
 	this.unit = unit;
 };
-
-function addItemToCart(name, price, unit) { //  Adds item to cart
+shoppingCart.addItemToCart = function(name, price, unit) {
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart[i].unit += unit;
-			saveCart();
+			this.saveCart();
 			return;
 		}
 	}
-	var item = new Item(name, price, unit);
+	var item = new this.Item(name, price, unit);
 	cart.push(item);
-	saveCart();
-}
-
-function removeUnitFromItem(name) { // Removes one unit from chosen item
+	this.saveCart();
+};
+shoppingCart.removeUnitFromItem = function(name) {
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart[i].unit --;
@@ -81,43 +81,42 @@ function removeUnitFromItem(name) { // Removes one unit from chosen item
 			break;
 		}
 	}
-	saveCart();
-}
+	shoppingCart.saveCart();
+};
 
-function removeItemFromCart(name) { // Removes chosen item from cart
+shoppingCart.removeItemFromCart = function(name) {
 	for (var i in cart) {
 		if (cart[i].name === name) {
 			cart.splice(i, 1);
 			break;
 		}
 	}
-	saveCart();
-}
+	shoppingCart.saveCart();
+};
 
-function emptyCart() { // Removes all items from cart
+shoppingCart.emptyCart = function() {
 	cart = [];
-	saveCart();
-}
+	shoppingCart.saveCart();
+};
 
-function totalUnitInCart() { // Returns the total amount of units in the cart 
+shoppingCart.totalUnitInCart = function() {
 	var totalCount = 0;
 	for (var i in cart) {
 		totalCount += cart[i].unit;
 	}
 
 	return totalCount;
-}
+};
 
-function totalPriceInCart() { // Returns the total amount of the price in the cart
+shoppingCart.totalPriceInCart = function() {
 	var totalPrice = 0;
 	for (var i in cart) {
 		totalPrice += cart[i].price * cart[i].unit;
 	}
 	return totalPrice.toFixed(2);
-}
+};
 
-
-function listCart() { // Returns cart as an array
+shoppingCart.listCart = function() {
 	var cartCopy = [];
 	for (var i in cart) {
 		var item = cart[i];
@@ -129,20 +128,26 @@ function listCart() { // Returns cart as an array
 		cartCopy.push(itemCopy);
 	}	
 	return cartCopy;
-}
+};
 
-
-function saveCart() { // Saves Cart into the files local storage
+shoppingCart.saveCart = function() {
 	localStorage.setItem("shoppingCart", JSON.stringify(cart));
-}
+};
 
-
-function loadCart() { // Loads the shopping cart from the files local storage
+shoppingCart.loadCart = function() {
 	cart = JSON.parse(localStorage.getItem("shoppingCart"));
-}
+};
+// cart : Array
+// Item : object/class
 
-loadCart();
+// addItemToCart : Fucntion
+// removeUnitFromItem : Function
+// removeItemFromCart : Function
+// emptyCart : Function
+// totalUnitInCart : Function
+// totalPriceInCart : Function
+// listCart : Function
+// saveCart : Function
+// loadCart : Function
+shoppingCart.loadCart();
 displayCart();
-
-
-
