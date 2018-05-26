@@ -1,17 +1,3 @@
-$(".add-to-cart").click(function(event){
-	event.preventDefault();
-	var name = $(this).attr("data-name");
-	var price = Number ($(this).attr("data-price"));
-
-	shoppingCart.addItemToCart(name, price, 1);
-	displayCart();
-});
-
-$("#clear-cart").click(function(event) {
-	shoppingCart.emptyCart();
-	displayCart();
-});
-
 function displayCart() {
 	var cartArray = shoppingCart.listCart();
 	var output = "";
@@ -25,8 +11,23 @@ function displayCart() {
 		</li>`
 	}
 	$("#show-cart").html(output);
+	$("#total-items").html(shoppingCart.totalUnitInCart());
 	$("#total-cart").html(shoppingCart.totalPriceInCart());
 }
+
+$(".add-to-cart").click(function(event){
+	event.preventDefault();
+	var name = $(this).attr("data-name");
+	var price = Number ($(this).attr("data-price"));
+
+	shoppingCart.addItemToCart(name, price, 1);
+	displayCart();
+});
+
+$("#clear-cart").click(function(event) {
+	shoppingCart.emptyCart();
+	displayCart();
+});
 
 $("#show-cart").on("click", ".delete-item", function(event) { // Clears Selected Item from cart
 	var name = $(this).attr("data-name");
@@ -48,7 +49,7 @@ $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the
 
 
 // **********************************************************
-// Shopping cart functions
+// Shopping Cart Object/Functions
 
 var shoppingCart = {};
 
@@ -59,50 +60,52 @@ shoppingCart.Item = function(name, price, unit) {
 	this.price = price;
 	this.unit = unit;
 };
+
 shoppingCart.addItemToCart = function(name, price, unit) {
-	for (var i in cart) {
-		if (cart[i].name === name) {
-			cart[i].unit += unit;
+	for (var i in this.cart) {
+		if (this.cart[i].name === name) {
+			this.cart[i].unit += unit;
 			this.saveCart();
 			return;
 		}
 	}
 	var item = new this.Item(name, price, unit);
-	cart.push(item);
+	this.cart.push(item);
 	this.saveCart();
 };
+
 shoppingCart.removeUnitFromItem = function(name) {
-	for (var i in cart) {
-		if (cart[i].name === name) {
-			cart[i].unit --;
-			if (cart[i].unit === 0) {
-				cart.splice(i, 1);
+	for (var i in this.cart) {
+		if (this.cart[i].name === name) {
+			this.cart[i].unit --;
+			if (this.cart[i].unit === 0) {
+				this.cart.splice(i, 1);
 			}
 			break;
 		}
 	}
-	shoppingCart.saveCart();
+	this.saveCart();
 };
 
 shoppingCart.removeItemFromCart = function(name) {
-	for (var i in cart) {
-		if (cart[i].name === name) {
-			cart.splice(i, 1);
+	for (var i in this.cart) {
+		if (this.cart[i].name === name) {
+			this.cart.splice(i, 1);
 			break;
 		}
 	}
-	shoppingCart.saveCart();
+	this.saveCart();
 };
 
 shoppingCart.emptyCart = function() {
-	cart = [];
-	shoppingCart.saveCart();
+	this.cart = [];
+	this.saveCart();
 };
 
 shoppingCart.totalUnitInCart = function() {
 	var totalCount = 0;
-	for (var i in cart) {
-		totalCount += cart[i].unit;
+	for (var i in this.cart) {
+		totalCount += this.cart[i].unit;
 	}
 
 	return totalCount;
@@ -110,16 +113,16 @@ shoppingCart.totalUnitInCart = function() {
 
 shoppingCart.totalPriceInCart = function() {
 	var totalPrice = 0;
-	for (var i in cart) {
-		totalPrice += cart[i].price * cart[i].unit;
+	for (var i in this.cart) {
+		totalPrice += this.cart[i].price * this.cart[i].unit;
 	}
 	return totalPrice.toFixed(2);
 };
 
 shoppingCart.listCart = function() {
 	var cartCopy = [];
-	for (var i in cart) {
-		var item = cart[i];
+	for (var i in this.cart) {
+		var item = this.cart[i];
 		var itemCopy = {};
 		for (var p in item) {
 			itemCopy[p] = item[p];
@@ -131,12 +134,21 @@ shoppingCart.listCart = function() {
 };
 
 shoppingCart.saveCart = function() {
-	localStorage.setItem("shoppingCart", JSON.stringify(cart));
+	localStorage.setItem("shoppingCart", JSON.stringify(this.cart));
 };
 
 shoppingCart.loadCart = function() {
-	cart = JSON.parse(localStorage.getItem("shoppingCart"));
+	this.cart = JSON.parse(localStorage.getItem("shoppingCart"));
 };
+
+shoppingCart.loadCart();
+displayCart();
+
+console.log('Shopping Cart: cart');
+console.log(shoppingCart.cart);
+console.log('Global Cart:');
+console.log(this.cart);
+
 // cart : Array
 // Item : object/class
 
@@ -149,5 +161,3 @@ shoppingCart.loadCart = function() {
 // listCart : Function
 // saveCart : Function
 // loadCart : Function
-shoppingCart.loadCart();
-displayCart();
