@@ -1,20 +1,3 @@
-function displayCart() {
-	var cartArray = shoppingCart.listCart();
-	var output = "";
-	for (var i in cartArray) {
-		output += `<li>
-		${cartArray[i].name} 
-		${cartArray[i].unit} x ${cartArray[i].price} = $${cartArray[i].total} 
-		<button class="add-item" data-name="${cartArray[i].name}">+</button>
-		<button class="subtract-item" data-name="${cartArray[i].name}">-</button> 
-		<button class="delete-item" data-name="${cartArray[i].name}">X</button>
-		</li>`
-	}
-	$("#show-cart").html(output);
-	$("#total-items").html(shoppingCart.totalUnitInCart());
-	$("#total-cart").html(shoppingCart.totalPriceInCart());
-}
-
 $(".add-to-cart").click(function(event){
 	event.preventDefault();
 	var name = $(this).attr("data-name");
@@ -47,6 +30,22 @@ $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the
 	displayCart();
 });
 
+function displayCart() {
+	var cartArray = shoppingCart.listCart();
+	var output = "";
+	for (var i in cartArray) {
+		output += `<li>
+		${cartArray[i].name} 
+		${cartArray[i].unit} x ${cartArray[i].price} = $${cartArray[i].total} 
+		<button class="add-item" data-name="${cartArray[i].name}">+</button>
+		<button class="subtract-item" data-name="${cartArray[i].name}">-</button> 
+		<button class="delete-item" data-name="${cartArray[i].name}">X</button>
+		</li>`
+	}
+	$("#show-cart").html(output);
+	$("#total-items").html(shoppingCart.totalUnitInCart());
+	$("#total-cart").html(shoppingCart.totalPriceInCart());
+}
 
 // **********************************************************
 // Shopping Cart Object/Functions
