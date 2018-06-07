@@ -32,8 +32,9 @@ $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the
 
 $("#show-cart").on("change", ".item-count", function(event){
 	var name = $(this).attr("data-name");
-	var count = $(this).val();
+	var count = Number ( $(this).val() );
 	shoppingCart.setCountForItem(name, count);
+	displayCart();
 });
 
 function displayCart() {
@@ -41,7 +42,8 @@ function displayCart() {
 	var output = "";
 	for (var i in cartArray) {
 		output += `<li>
-		${cartArray[i].name} <input class="item-count" type="number" data-name="${cartArray[i].name}" value="${cartArray[i].unit}"> 
+		${cartArray[i].name} 
+		<input class="item-count" type="number" data-name="${cartArray[i].name}" value="${cartArray[i].unit}"> 
 		x ${cartArray[i].price} = $${cartArray[i].total} 
 		<button class="add-item" data-name="${cartArray[i].name}">+</button>
 		<button class="subtract-item" data-name="${cartArray[i].name}">-</button> 
