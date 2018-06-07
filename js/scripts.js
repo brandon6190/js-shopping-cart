@@ -30,13 +30,19 @@ $("#show-cart").on("click", ".add-item", function(event) { // Adds 1 unit to the
 	displayCart();
 });
 
+$("#show-cart").on("change", ".item-count", function(event){
+	var name = $(this).attr("data-name");
+	var count = $(this).val();
+	shoppingCart.setCountForItem(name, count);
+});
+
 function displayCart() {
 	var cartArray = shoppingCart.listCart();
 	var output = "";
 	for (var i in cartArray) {
 		output += `<li>
-		${cartArray[i].name} 
-		${cartArray[i].unit} x ${cartArray[i].price} = $${cartArray[i].total} 
+		${cartArray[i].name} <input class="item-count" type="number" data-name="${cartArray[i].name}" value="${cartArray[i].unit}"> 
+		x ${cartArray[i].price} = $${cartArray[i].total} 
 		<button class="add-item" data-name="${cartArray[i].name}">+</button>
 		<button class="subtract-item" data-name="${cartArray[i].name}">-</button> 
 		<button class="delete-item" data-name="${cartArray[i].name}">X</button>
@@ -70,6 +76,16 @@ shoppingCart.addItemToCart = function(name, price, unit) {
 	}
 	var item = new this.Item(name, price, unit);
 	this.cart.push(item);
+	this.saveCart();
+};
+
+shoppingCart.setCountForItem = function(name, count) {
+	for (var i in this.cart) {
+		if (this.cart[i].name === name) {
+			this.cart[i].unit = count;
+			break;		
+		}
+	}
 	this.saveCart();
 };
 
